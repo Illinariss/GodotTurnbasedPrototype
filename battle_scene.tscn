@@ -1,7 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://b4fruhiln6u1j"]
+[gd_scene load_steps=2 format=3 uid="uid://b4fruhiln6u1j"]
 
 [ext_resource type="Script" uid="uid://dmbofxtd22j8v" path="res://BattleScene.cs" id="1_fw8re"]
-[ext_resource type="PackedScene" uid="uid://8w35m878oka8" path="res://Scripts/battlesystem/CharacterNode.tscn" id="2_r5l0u"]
 
 [node name="BattleScene" type="Control"]
 layout_mode = 3
@@ -11,6 +10,9 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_fw8re")
+Map = NodePath("Battlers")
+BattleLog = NodePath("BattleLog")
+NextTurnButton = NodePath("NextTurnButton")
 
 [node name="TextureRect" type="TextureRect" parent="."]
 layout_mode = 1
@@ -23,9 +25,6 @@ metadata/_edit_lock_ = true
 
 [node name="Battlers" type="Node2D" parent="."]
 
-[node name="CharacterNode" parent="Battlers" instance=ExtResource("2_r5l0u")]
-position = Vector2(68, 74)
-scale = Vector2(0.5, 0.5)
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -48,3 +47,16 @@ text = "Guard"
 unique_name_in_owner = true
 layout_mode = 2
 text = "Skip"
+
+[node name="BattleLog" type="RichTextLabel" parent="."]
+layout_mode = 2
+offset_left = 50.0
+offset_top = 650.0
+offset_right = 1100.0
+offset_bottom = 750.0
+
+[node name="NextTurnButton" type="Button" parent="."]
+layout_mode = 2
+offset_left = 900.0
+offset_top = 760.0
+text = "Next"

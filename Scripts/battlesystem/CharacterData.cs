@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Godot;
 
 public enum CharacterStat
 {
@@ -23,6 +24,8 @@ public class CharacterData
     public int Attack { get; set; }
     public int Defence { get; set; }
 
+    public Texture2D? CharacterImage { get; set; }
+
     public CharacterNode Node { get; set; }
 
     private readonly List<Buff> buffs = new();
@@ -32,7 +35,7 @@ public class CharacterData
     /// </summary>
     public int Round { get; private set; }
 
-    public CharacterData(string name, int maxHP, int maxMana, int speed, int attack, int defence)
+    public CharacterData(string name, int maxHP, int maxMana, int speed, int attack, int defence, Texture2D? characterImage = null)
     {
         Name = name;
         MaxHP = maxHP;
@@ -42,6 +45,7 @@ public class CharacterData
         Speed = speed;
         Attack = attack;
         Defence = defence;
+        CharacterImage = characterImage;
     }
 
     public bool IsAlive => CurrentHP > 0;

@@ -1,7 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://i0oq6chllo6s"]
+[gd_scene load_steps=2 format=3 uid="uid://i0oq6chllo6s"]
 
 [ext_resource type="Script" uid="uid://cmtacfc1vsv87" path="res://Game.cs" id="1_80nbo"]
-[ext_resource type="PackedScene" uid="uid://b4fruhiln6u1j" path="res://battle_scene.tscn" id="2_e2o6t"]
 
 [node name="Game" type="Control"]
 layout_mode = 3
@@ -41,8 +40,5 @@ layout_mode = 2
 custom_minimum_size = Vector2(0, 250)
 layout_mode = 2
 
-[node name="BattleScene" parent="PanelContainer/MarginContainer" instance=ExtResource("2_e2o6t")]
-visible = false
-layout_mode = 2
 
 [connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/btnKampf1" to="." method="_on_btn_kampf_1_pressed"]

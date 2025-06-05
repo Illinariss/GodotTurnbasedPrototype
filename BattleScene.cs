@@ -56,7 +56,8 @@ public partial class BattleScene : Control
 
     public override void _Ready()
     {
-
+        if (NextTurnButton != null)
+            NextTurnButton.Pressed += OnNextTurn;
     }
 
     private void OnNextTurn()
