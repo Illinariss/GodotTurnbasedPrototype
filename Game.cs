@@ -10,7 +10,7 @@ public partial class Game : Control
 
     public override void _Ready()
     {
-        //regelt nur ein Child
+        // Handles only the first child
         previousContent = MainContent.GetChildCount() > 0 ? MainContent.GetChild<Control>(0) : null;
 
     }
