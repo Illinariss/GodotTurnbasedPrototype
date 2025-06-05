@@ -22,10 +22,9 @@ public partial class Game : Control
 
         var scene = GD.Load<PackedScene>("res://battle_scene.tscn");
         battleScene = scene.Instantiate<BattleScene>();
+        MainContent.AddChild(battleScene);
         // Optional: Charakterdaten an Szene übergeben
         battleScene.Setup(playerCharacters, enemies, OnBattleFinished);
-
-        MainContent.AddChild(battleScene);
     }
 
     public void OnBattleFinished()
