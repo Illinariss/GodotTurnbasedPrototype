@@ -10,12 +10,12 @@ public partial class Game : Control
 
     public override void _Ready()
     {
-        //regelt nur ein Child
+        // Handles only the first child
         previousContent = MainContent.GetChildCount() > 0 ? MainContent.GetChild<Control>(0) : null;
 
     }
 
-    public void StartBattle(List<CharacterData> playercharackters, List<CharacterData> enemies)
+    public void StartBattle(List<CharacterData> playerCharacters, List<CharacterData> enemies)
     {
         if (previousContent != null)
             previousContent.Visible = false;
@@ -23,7 +23,7 @@ public partial class Game : Control
         var scene = GD.Load<PackedScene>("res://scenes/battle/BattleScene.tscn");
         battleScene = scene.Instantiate<BattleScene>();
         // Optional: Charakterdaten an Szene übergeben
-        battleScene.Setup(playercharackters, enemies, OnBattleFinished);
+        battleScene.Setup(playerCharacters, enemies, OnBattleFinished);
 
         MainContent.AddChild(battleScene);
     }

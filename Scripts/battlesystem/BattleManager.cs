@@ -5,16 +5,16 @@ using Godot;
 
 public class BattleManager
 {
-    private List<CharacterData> playercharackters;
+    private List<CharacterData> playerCharacters;
     private List<CharacterData> enemies;
     private RichTextLabel log;
     private Action onFinishedCallback;
     private int currentEnemyIndex = 0;
     private bool playerTurn = true;
 
-    public BattleManager(List<CharacterData> playercharackters, List<CharacterData> enemies, RichTextLabel log, Action onFinishedCallback)
+    public BattleManager(List<CharacterData> playerCharacters, List<CharacterData> enemies, RichTextLabel log, Action onFinishedCallback)
     {
-        this.playercharackters = playercharackters;
+        this.playerCharacters = playerCharacters;
         this.enemies = enemies;
         this.log = log;
         this.onFinishedCallback = onFinishedCallback;
@@ -28,7 +28,7 @@ public class BattleManager
     public void ExecuteTurn()
     {
 
-        if (playercharackters.All(p => p.IsDead) || enemies.All(p => p.IsDead))
+        if (playerCharacters.All(p => p.IsDead) || enemies.All(p => p.IsDead))
         {
             log.AppendText("\nDer Kampf ist vorbei.");
             return;
@@ -38,16 +38,16 @@ public class BattleManager
         // if (playerTurn)
         // {
         //     var target = enemies[currentEnemyIndex % enemies.Count];
-        //     int damage = Mathf.Max(0, playercharackters.Attack - target.Defence);
+        //     int damage = Mathf.Max(0, playerCharacters.Attack - target.Defence);
         //     target.CurrentHP -= damage;
-        //     log.AppendText($"\n{playercharackters.Name} greift {target.Name} an für {damage} Schaden!");
+        //     log.AppendText($"\n{playerCharacters.Name} greift {target.Name} an für {damage} Schaden!");
         // }
         // else
         // {
         //     var attacker = enemies[currentEnemyIndex % enemies.Count];
-        //     int damage = Mathf.Max(0, attacker.Attack - playercharackters.Defence);
-        //     playercharackters.CurrentHP -= damage;
-        //     log.AppendText($"\n{attacker.Name} greift {playercharackters.Name} an für {damage} Schaden!");
+        //     int damage = Mathf.Max(0, attacker.Attack - playerCharacters.Defence);
+        //     playerCharacters.CurrentHP -= damage;
+        //     log.AppendText($"\n{attacker.Name} greift {playerCharacters.Name} an für {damage} Schaden!");
         // }
 
         playerTurn = !playerTurn;

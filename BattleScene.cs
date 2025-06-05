@@ -13,18 +13,19 @@ public partial class BattleScene : Control
     private BattleManager battleManager;
     
      private Action onBattleFinished;
-    public void Setup(List<CharacterData> playercharackters, List<CharacterData> enemies, Action onFinishedCallback)
+    public void Setup(List<CharacterData> playerCharacters, List<CharacterData> enemies, Action onFinishedCallback)
     {
         this.onBattleFinished = onFinishedCallback;
-        foreach (var playercharackter in playercharackters)
-        {   
-            AddCharacterNode(playercharackter, isPlayer: true);
+        foreach (var playerCharacter in playerCharacters)
+        {
+            AddCharacterNode(playerCharacter, isPlayer: true);
         }
         foreach (var enemy in enemies)
         {
             AddCharacterNode(enemy, isPlayer: false);
         }
-        battleManager = new BattleManager(playercharackters, enemies, BattleLog, onFinishedCallback);
+        battleManager = new BattleManager(playerCharacters, enemies, BattleLog, onFinishedCallback);
+
     }
      private void AddCharacterNode(CharacterData data, bool isPlayer)
     {
