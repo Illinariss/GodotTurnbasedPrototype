@@ -22,9 +22,8 @@ public partial class BattleScene : Control
         }
         foreach (var enemy in enemies)
         {
-            enemyNodes.Add(CharacterNode.Create(enemy));
             AddCharacterNode(enemy, isPlayer: false);
-        }        
+        }
         battleManager = new BattleManager(playerCharacters, enemies, BattleLog, onFinishedCallback);
     }
      private void AddCharacterNode(CharacterData data, bool isPlayer)
