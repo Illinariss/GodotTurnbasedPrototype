@@ -2,11 +2,15 @@
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rundenbasiertes kampfsystem prototyp", "Rundenbasiertes kampfsystem prototyp.csproj", "{0B4FCC99-2B8A-448B-91F0-D2C52E20684D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{2DAFBF04-F5B9-49CC-BEEA-82421D1E89DC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rundenbasierteskampfsystemprototyp.Tests", "tests\Rundenbasierteskampfsystemprototyp.Tests\Rundenbasierteskampfsystemprototyp.Tests.csproj", "{3B5185B0-0B9A-4946-A390-A095480B4A5D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-	Debug|Any CPU = Debug|Any CPU
-	ExportDebug|Any CPU = ExportDebug|Any CPU
-	ExportRelease|Any CPU = ExportRelease|Any CPU
+		Debug|Any CPU = Debug|Any CPU
+		ExportDebug|Any CPU = ExportDebug|Any CPU
+		ExportRelease|Any CPU = ExportRelease|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{0B4FCC99-2B8A-448B-91F0-D2C52E20684D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -15,5 +19,14 @@ Global
 		{0B4FCC99-2B8A-448B-91F0-D2C52E20684D}.ExportDebug|Any CPU.Build.0 = ExportDebug|Any CPU
 		{0B4FCC99-2B8A-448B-91F0-D2C52E20684D}.ExportRelease|Any CPU.ActiveCfg = ExportRelease|Any CPU
 		{0B4FCC99-2B8A-448B-91F0-D2C52E20684D}.ExportRelease|Any CPU.Build.0 = ExportRelease|Any CPU
+		{3B5185B0-0B9A-4946-A390-A095480B4A5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B5185B0-0B9A-4946-A390-A095480B4A5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B5185B0-0B9A-4946-A390-A095480B4A5D}.ExportDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B5185B0-0B9A-4946-A390-A095480B4A5D}.ExportDebug|Any CPU.Build.0 = Debug|Any CPU
+		{3B5185B0-0B9A-4946-A390-A095480B4A5D}.ExportRelease|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B5185B0-0B9A-4946-A390-A095480B4A5D}.ExportRelease|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3B5185B0-0B9A-4946-A390-A095480B4A5D} = {2DAFBF04-F5B9-49CC-BEEA-82421D1E89DC}
 	EndGlobalSection
 EndGlobal
