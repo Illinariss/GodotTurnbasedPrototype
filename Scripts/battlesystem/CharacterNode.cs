@@ -76,7 +76,14 @@ public partial class CharacterNode : Node2D
         data.Node = this;
         if (data.CharacterImage != null)
             CharacterImage = data.CharacterImage;
-        UpdateUI();
+
+        // UpdateUI will be called in _Ready() once the node is fully
+        // initialized. Avoid calling it here when UI nodes are not yet
+        // available.
+        if (_hpBar != null && _manaBar != null)
+        {
+            UpdateUI();
+        }
     }
 
     public void UpdateUI()
