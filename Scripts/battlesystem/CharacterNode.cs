@@ -74,6 +74,8 @@ public partial class CharacterNode : Node2D
     {
         Data = data;
         data.Node = this;
+        if (data.CharacterImage != null)
+            CharacterImage = data.CharacterImage;
         UpdateUI();
     }
 
