@@ -41,7 +41,6 @@ public partial class Game : Control
 
     internal void _on_btn_kampf_1_pressed()
     {
-
         var playerImage = GD.Load<Texture2D>("res://assets/Example_Character_1.png");
         var bearImage = GD.Load<Texture2D>("res://assets/Bär in Bewegung.png");
         var wolfImage = GD.Load<Texture2D>("res://assets/Wolf in schwarzem Silhouettenprofil.png");
