@@ -25,6 +25,7 @@ public partial class BattleScene : Control
             AddCharacterNode(enemy, isPlayer: false);
         }
         battleManager = new BattleManager(playerCharacters, enemies, BattleLog, onFinishedCallback);
+
     }
      private void AddCharacterNode(CharacterData data, bool isPlayer)
     {
