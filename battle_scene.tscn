@@ -1,0 +1,50 @@
+[gd_scene load_steps=3 format=3 uid="uid://b4fruhiln6u1j"]
+
+[ext_resource type="Script" uid="uid://dmbofxtd22j8v" path="res://BattleScene.cs" id="1_fw8re"]
+[ext_resource type="PackedScene" uid="uid://8w35m878oka8" path="res://Scripts/battlesystem/CharacterNode.tscn" id="2_r5l0u"]
+
+[node name="BattleScene" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_fw8re")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_lock_ = true
+
+[node name="Battlers" type="Node2D" parent="."]
+
+[node name="CharacterNode" parent="Battlers" instance=ExtResource("2_r5l0u")]
+position = Vector2(68, 74)
+scale = Vector2(0.5, 0.5)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+offset_left = 356.0
+offset_top = 536.0
+offset_right = 708.0
+offset_bottom = 642.0
+
+[node name="btnAngriff" type="Button" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Angriff"
+
+[node name="btnGuard" type="Button" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Guard"
+
+[node name="btnSkip" type="Button" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Skip"

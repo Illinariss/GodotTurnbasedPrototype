@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://by74w7umn2kpo"]
+
+[ext_resource type="Script" uid="uid://u8rkioeroef2" path="res://Scripts/battlesystem/CharacterNode.cs" id="1_4flbx"]
+
+[node name="CharacterNode" type="Node2D"]
+script = ExtResource("1_4flbx")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0

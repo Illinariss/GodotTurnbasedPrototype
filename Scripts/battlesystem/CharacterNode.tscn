@@ -1,0 +1,93 @@
+[gd_scene load_steps=12 format=3 uid="uid://8w35m878oka8"]
+
+[ext_resource type="Script" uid="uid://u8rkioeroef2" path="res://Scripts/battlesystem/CharacterNode.cs" id="1_0pxp8"]
+[ext_resource type="Texture2D" uid="uid://dhsombtrtq253" path="res://assets/Example_Character_1.png" id="2_3hcxy"]
+[ext_resource type="Shader" uid="uid://bfpky86adx6j8" path="res://Scripts/battlesystem/CharacterNode.gdshader" id="2_o6dxo"]
+
+[sub_resource type="Environment" id="Environment_xed63"]
+background_mode = 3
+glow_enabled = true
+glow_hdr_threshold = 1.51
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_o6dxo"]
+radius = 63.0
+height = 250.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_o6dxo"]
+shader = ExtResource("2_o6dxo")
+shader_parameter/line_color = Color(1, 1, 1, 1)
+shader_parameter/line_thickness = 10.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3hcxy"]
+bg_color = Color(0.87451, 0.87451, 0.87451, 0.203922)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0ucsi"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1p7dj"]
+bg_color = Color(1, 0, 0, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_doh8v"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kyx5s"]
+bg_color = Color(0, 0, 1, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[node name="CharacterNode" type="Node2D"]
+script = ExtResource("1_0pxp8")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_xed63")
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
+position = Vector2(110, 206)
+shape = SubResource("CapsuleShape2D_o6dxo")
+
+[node name="CharacterSprite" type="Sprite2D" parent="CharacterBody2D"]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_o6dxo")
+position = Vector2(109, 210)
+scale = Vector2(0.184, 0.19)
+texture = ExtResource("2_3hcxy")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+offset_right = 250.0
+offset_bottom = 60.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_3hcxy")
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="HPBar" type="ProgressBar" parent="PanelContainer/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxEmpty_0ucsi")
+theme_override_styles/fill = SubResource("StyleBoxFlat_1p7dj")
+value = 80.0
+rounded = true
+
+[node name="ManaBar" type="ProgressBar" parent="PanelContainer/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxEmpty_doh8v")
+theme_override_styles/fill = SubResource("StyleBoxFlat_kyx5s")
+value = 40.0
