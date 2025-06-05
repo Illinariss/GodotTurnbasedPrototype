@@ -11,6 +11,7 @@ public class BattleManager
     private Action onFinishedCallback;
     private Dictionary<CharacterData, int> initiativeGauge = new();
     private List<CharacterData> allCharacters = new();
+    private const float SkipRefundFactor = 0.75f;
 
     /// <summary>
     /// Contains the next characters that will act. Updated after each turn.
@@ -63,6 +64,32 @@ public class BattleManager
         }
     }
 
+    public void Attack(CharacterData attacker, CharacterData target)
+    {
+        int atk = attacker.GetCurrentAttack();
+        int def = target.GetCurrentDefence();
+        int damage = Math.Max(1, atk - def);
+        target.CurrentHP = Math.Max(0, target.CurrentHP - damage);
+        log?.AppendText($"\n{attacker.Name} greift {target.Name} an und verursacht {damage} Schaden.");
+        if (target.IsDead)
+            log?.AppendText($"\n{target.Name} wurde besiegt.");
+    }
+
+    public void Guard(CharacterData actor)
+    {
+        var buff = new Buff(CharacterStat.Defence, 0.5f, 0, actor.Round, actor.Round + 1);
+        actor.AddBuff(buff);
+        log?.AppendText($"\n{actor.Name} verteidigt sich.");
+    }
+
+    public void Skip(CharacterData actor)
+    {
+        var rounds = allCharacters.ToDictionary(c => c, c => c.Round);
+        int threshold = GetThreshold(initiativeGauge, rounds);
+        initiativeGauge[actor] += (int)(threshold * SkipRefundFactor);
+        log?.AppendText($"\n{actor.Name} hält sich zurück.");
+    }
+
     private List<CharacterData> PredictTurns(int count)
     {
         var gaugeCopy = new Dictionary<CharacterData, int>(initiativeGauge);
@@ -89,9 +116,20 @@ public class BattleManager
 
         var rounds = allCharacters.ToDictionary(c => c, c => c.Round);
         var actor = StepTurn(initiativeGauge, rounds);
-        actor.AdvanceRound();
 
+        actor.RemoveExpiredBuffs(actor.Round);
         log.AppendText($"\n{actor.Name} ist am Zug.");
+
+        CharacterData target = null;
+        if (playerCharacters.Contains(actor))
+            target = enemies.FirstOrDefault(e => e.IsAlive);
+        else
+            target = playerCharacters.FirstOrDefault(p => p.IsAlive);
+
+        if (target != null)
+            Attack(actor, target);
+
+        actor.AdvanceRound();
 
         UpcomingTurns = PredictTurns(10);
     }
