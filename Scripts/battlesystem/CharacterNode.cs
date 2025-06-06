@@ -29,10 +29,6 @@ public partial class CharacterNode : Node2D
         _shadermaterial.Shader = shader;
         _sprite.Material = _shadermaterial;
 
-
-        // this.Connect("mouse_entered", new Callable(this, nameof(OnMouseEntered)));
-        // this.Connect("mouse_exited", new Callable(this, nameof(OnMouseExited)));
-
         UpdateUI();
         UpdateOutline();
     }
@@ -62,9 +58,7 @@ public partial class CharacterNode : Node2D
         if (_sprite == null) return;
 
         if (_isCurrentFighter)
-        {
-            GD.Print("_greenshader");
-            
+        {   
             _shadermaterial.SetShaderParameter("line_color", new Color(0, 1, 0, 1));
             _shadermaterial.SetShaderParameter("line_thickness", 10.0f);
             return;
@@ -73,14 +67,12 @@ public partial class CharacterNode : Node2D
         {
             if (this.Data.IsPlayerCharacter)
             {
-                GD.Print("_whiteshader");
                 _shadermaterial.SetShaderParameter("line_color", new Color(1, 1, 1, 1));
                 _shadermaterial.SetShaderParameter("line_thickness", 10.0f);
                 
             }
             else
             {
-                GD.Print("_redshader");
                 _shadermaterial.SetShaderParameter("line_color", new Color(1, 0, 0, 1));
                 _shadermaterial.SetShaderParameter("line_thickness", 10.0f);                
             }
