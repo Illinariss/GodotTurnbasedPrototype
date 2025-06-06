@@ -27,36 +27,76 @@ public partial class BattleScene : Control
         battleManager = new BattleManager(playerCharacters, enemies, BattleLog, onFinishedCallback);
 
     }
-     private void AddCharacterNode(CharacterData data, bool isPlayer)
+    private bool IsOverlapping(Vector2 position, List<CharacterNode> nodes, float minDistance)
+    {
+        foreach (var n in nodes)
+        {
+            if (n.Position.DistanceTo(position) < minDistance)
+                return true;
+        }
+        return false;
+    }
+
+    private Vector2 GetRandomPosition(Vector2 areaMin, Vector2 areaMax, List<CharacterNode> existingNodes)
+    {
+        var rand = new Random();
+        const int maxAttempts = 100;
+        const float minDistance = 80f;
+
+        for (int i = 0; i < maxAttempts; i++)
+        {
+            var pos = new Vector2(
+                (float)(areaMin.X + rand.NextDouble() * (areaMax.X - areaMin.X)),
+                (float)(areaMin.Y + rand.NextDouble() * (areaMax.Y - areaMin.Y))
+            );
+
+            if (!IsOverlapping(pos, existingNodes, minDistance))
+                return pos;
+        }
+
+        // Fallback if no free position was found
+        return new Vector2(
+            (float)(areaMin.X + rand.NextDouble() * (areaMax.X - areaMin.X)),
+            (float)(areaMin.Y + rand.NextDouble() * (areaMax.Y - areaMin.Y))
+        );
+    }
+
+    private void AddCharacterNode(CharacterData data, bool isPlayer)
     {
         var node = CharacterNode.Create(data);
         Vector2 areaMin, areaMax;
+        List<CharacterNode> targetList;
         if (isPlayer)
         {
             areaMin = new Vector2(50, 100);
             areaMax = new Vector2(250, 600);
-            Map.AddChild(node);
-            playerNodes.Add(node);
+            targetList = playerNodes;
         }
         else
         {
             areaMin = new Vector2(800, 100);
             areaMax = new Vector2(1100, 600);
-            Map.AddChild(node);
-            enemyNodes.Add(node);
+            targetList = enemyNodes;
         }
-        var rand = new Random();
-        var pos = new Vector2(
-            (float)(areaMin.X + rand.NextDouble() * (areaMax.X - areaMin.X)),
-            (float)(areaMin.Y + rand.NextDouble() * (areaMax.Y - areaMin.Y))
-        );
+
+        var pos = GetRandomPosition(areaMin, areaMax, targetList);
         node.Position = pos;
+
+        Map.AddChild(node);
+        targetList.Add(node);
     }
 
 
     public override void _Ready()
     {
+        if (Map == null)
+        {
+            // Assign the Battlers node if not linked via the inspector
+            Map = GetNode<Node2D>("%Battlers");
+        }
 
+        if (NextTurnButton != null)
+            NextTurnButton.Pressed += OnNextTurn;
     }
 
     private void OnNextTurn()

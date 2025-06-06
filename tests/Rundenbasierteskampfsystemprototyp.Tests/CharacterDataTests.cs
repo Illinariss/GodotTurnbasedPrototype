@@ -21,4 +21,19 @@ public class CharacterDataTests
         Assert.Equal(expectedAlive, character.IsAlive);
         Assert.Equal(expectedDead, character.IsDead);
     }
+
+    [Fact]
+    public void GetSpeed_Returns_BaseSpeed()
+    {
+        var character = new CharacterData("Test", 10, 5, 7, 1, 1);
+        Assert.Equal(7, character.GetSpeed(0));
+    }
+
+    [Fact]
+    public void AdvanceRound_Increments_Round()
+    {
+        var character = new CharacterData("Test", 10, 5, 7, 1, 1);
+        character.AdvanceRound();
+        Assert.Equal(1, character.Round);
+    }
 }
