@@ -11,11 +11,17 @@ public partial class BattleScene : Control
     private List<CharacterNode> playerNodes = new();
     private List<CharacterNode> enemyNodes = new();
     private BattleManager battleManager;
+    private Queue<Vector2> playerPositions = new();
+    private Queue<Vector2> enemyPositions = new();
     
      private Action onBattleFinished;
     public void Setup(List<CharacterData> playerCharacters, List<CharacterData> enemies, Action onFinishedCallback)
     {
         this.onBattleFinished = onFinishedCallback;
+
+        playerPositions = new Queue<Vector2>(GetGridPositions(playerCharacters.Count, new Vector2(50, 100), new Vector2(250, 600)));
+        enemyPositions = new Queue<Vector2>(GetGridPositions(enemies.Count, new Vector2(800, 100), new Vector2(1100, 600)));
+
         foreach (var playerCharacter in playerCharacters)
         {
             AddCharacterNode(playerCharacter, isPlayer: true);
@@ -27,59 +33,65 @@ public partial class BattleScene : Control
         battleManager = new BattleManager(playerCharacters, enemies, BattleLog, onFinishedCallback);
 
     }
-    private bool IsOverlapping(Vector2 position, List<CharacterNode> nodes, float minDistance)
+
+    private List<Vector2> GetGridPositions(int count, Vector2 areaMin, Vector2 areaMax)
     {
-        foreach (var n in nodes)
+        var result = new List<Vector2>();
+        if (count <= 0)
+            return result;
+
+        if (count == 1)
         {
-            if (n.Position.DistanceTo(position) < minDistance)
-                return true;
-        }
-        return false;
-    }
-
-    private Vector2 GetRandomPosition(Vector2 areaMin, Vector2 areaMax, List<CharacterNode> existingNodes)
-    {
-        var rand = new Random();
-        const int maxAttempts = 100;
-        const float minDistance = 80f;
-
-        for (int i = 0; i < maxAttempts; i++)
-        {
-            var pos = new Vector2(
-                (float)(areaMin.X + rand.NextDouble() * (areaMax.X - areaMin.X)),
-                (float)(areaMin.Y + rand.NextDouble() * (areaMax.Y - areaMin.Y))
-            );
-
-            if (!IsOverlapping(pos, existingNodes, minDistance))
-                return pos;
+            result.Add((areaMin + areaMax) / 2);
+            return result;
         }
 
-        // Fallback if no free position was found
-        return new Vector2(
-            (float)(areaMin.X + rand.NextDouble() * (areaMax.X - areaMin.X)),
-            (float)(areaMin.Y + rand.NextDouble() * (areaMax.Y - areaMin.Y))
-        );
+        if (count == 2)
+        {
+            var x = (areaMin.X + areaMax.X) / 2f;
+            var cellHeight = (areaMax.Y - areaMin.Y) / 2f;
+            result.Add(new Vector2(x, areaMin.Y + cellHeight / 2f));
+            result.Add(new Vector2(x, areaMin.Y + 3f * cellHeight / 2f));
+            return result;
+        }
+
+        int columns = (int)Math.Ceiling(Math.Sqrt(count));
+        int rows = (int)Math.Ceiling((float)count / columns);
+
+        float cellWidth = (areaMax.X - areaMin.X) / columns;
+        float cellHeight2 = (areaMax.Y - areaMin.Y) / rows;
+
+        for (int r = 0; r < rows; r++)
+        {
+            for (int c = 0; c < columns; c++)
+            {
+                result.Add(new Vector2(
+                    areaMin.X + c * cellWidth + cellWidth / 2f,
+                    areaMin.Y + r * cellHeight2 + cellHeight2 / 2f));
+                if (result.Count == count)
+                    return result;
+            }
+        }
+
+        return result;
     }
 
     private void AddCharacterNode(CharacterData data, bool isPlayer)
     {
         var node = CharacterNode.Create(data);
-        Vector2 areaMin, areaMax;
         List<CharacterNode> targetList;
+        Vector2 pos;
         if (isPlayer)
         {
-            areaMin = new Vector2(50, 100);
-            areaMax = new Vector2(250, 600);
             targetList = playerNodes;
+            pos = playerPositions.Count > 0 ? playerPositions.Dequeue() : Vector2.Zero;
         }
         else
         {
-            areaMin = new Vector2(800, 100);
-            areaMax = new Vector2(1100, 600);
             targetList = enemyNodes;
+            pos = enemyPositions.Count > 0 ? enemyPositions.Dequeue() : Vector2.Zero;
         }
 
-        var pos = GetRandomPosition(areaMin, areaMax, targetList);
         node.Position = pos;
 
         Map.AddChild(node);
