@@ -89,6 +89,12 @@ public partial class BattleScene : Control
 
     public override void _Ready()
     {
+        if (Map == null)
+        {
+            // Assign the Battlers node if not linked via the inspector
+            Map = GetNode<Node2D>("%Battlers");
+        }
+
         if (NextTurnButton != null)
             NextTurnButton.Pressed += OnNextTurn;
     }
