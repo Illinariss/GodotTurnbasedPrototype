@@ -35,14 +35,12 @@ public partial class CharacterNode : Node2D
 
     private void _on_character_body_2d_mouse_entered()
     {
-        GD.Print("OnMouseEntered");
         _isHovered = true;
         UpdateOutline();
     }
 
     private void _on_character_body_2d_mouse_exited()
     {
-        GD.Print("OnMouseExited");
         _isHovered = false;
         UpdateOutline();
     }
