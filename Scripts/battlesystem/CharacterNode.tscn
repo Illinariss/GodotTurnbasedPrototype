@@ -1,13 +1,8 @@
-[gd_scene load_steps=12 format=3 uid="uid://8w35m878oka8"]
+[gd_scene load_steps=11 format=3 uid="uid://8w35m878oka8"]
 
 [ext_resource type="Script" uid="uid://u8rkioeroef2" path="res://Scripts/battlesystem/CharacterNode.cs" id="1_0pxp8"]
 [ext_resource type="Texture2D" uid="uid://dhsombtrtq253" path="res://assets/Example_Character_1.png" id="2_3hcxy"]
 [ext_resource type="Shader" uid="uid://bfpky86adx6j8" path="res://Scripts/battlesystem/CharacterNode.gdshader" id="2_o6dxo"]
-
-[sub_resource type="Environment" id="Environment_xed63"]
-background_mode = 3
-glow_enabled = true
-glow_hdr_threshold = 1.51
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_o6dxo"]
 radius = 63.0
@@ -44,10 +39,8 @@ corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
 [node name="CharacterNode" type="Node2D"]
+scale = Vector2(0.5, 0.5)
 script = ExtResource("1_0pxp8")
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_xed63")
 
 [node name="CharacterBody2D" type="CharacterBody2D" parent="."]
 
