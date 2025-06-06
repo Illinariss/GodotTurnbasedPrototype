@@ -1,17 +1,12 @@
-[gd_scene load_steps=11 format=3 uid="uid://8w35m878oka8"]
+[gd_scene load_steps=10 format=3 uid="uid://8w35m878oka8"]
 
 [ext_resource type="Script" uid="uid://u8rkioeroef2" path="res://Scripts/battlesystem/CharacterNode.cs" id="1_0pxp8"]
 [ext_resource type="Texture2D" uid="uid://dhsombtrtq253" path="res://assets/Example_Character_1.png" id="2_3hcxy"]
-[ext_resource type="Shader" uid="uid://bfpky86adx6j8" path="res://Scripts/battlesystem/CharacterNode.gdshader" id="2_o6dxo"]
+[ext_resource type="Material" uid="uid://b3k6vlw6bpvl6" path="res://assets/RedOutline.tres" id="2_o6dxo"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_o6dxo"]
 radius = 63.0
 height = 250.0
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_o6dxo"]
-shader = ExtResource("2_o6dxo")
-shader_parameter/line_color = Color(1, 1, 1, 1)
-shader_parameter/line_thickness = 10.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3hcxy"]
 bg_color = Color(0.87451, 0.87451, 0.87451, 0.203922)
@@ -43,6 +38,8 @@ scale = Vector2(0.5, 0.5)
 script = ExtResource("1_0pxp8")
 
 [node name="CharacterBody2D" type="CharacterBody2D" parent="."]
+input_pickable = true
+motion_mode = 1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
 position = Vector2(110, 206)
@@ -50,7 +47,7 @@ shape = SubResource("CapsuleShape2D_o6dxo")
 
 [node name="CharacterTexture" type="Sprite2D" parent="CharacterBody2D"]
 unique_name_in_owner = true
-material = SubResource("ShaderMaterial_o6dxo")
+material = ExtResource("2_o6dxo")
 position = Vector2(109, 210)
 scale = Vector2(0.184, 0.19)
 texture = ExtResource("2_3hcxy")
@@ -58,6 +55,7 @@ texture = ExtResource("2_3hcxy")
 [node name="PanelContainer" type="PanelContainer" parent="."]
 offset_right = 250.0
 offset_bottom = 60.0
+mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_3hcxy")
 
 [node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
@@ -66,7 +64,6 @@ theme_override_constants/margin_left = 5
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
-
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer"]
 layout_mode = 2
@@ -90,3 +87,6 @@ layout_mode = 2
 theme_override_styles/background = SubResource("StyleBoxEmpty_doh8v")
 theme_override_styles/fill = SubResource("StyleBoxFlat_kyx5s")
 value = 40.0
+
+[connection signal="mouse_entered" from="CharacterBody2D" to="." method="_on_character_body_2d_mouse_entered"]
+[connection signal="mouse_exited" from="CharacterBody2D" to="." method="_on_character_body_2d_mouse_exited"]

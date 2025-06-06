@@ -52,6 +52,9 @@ public class CharacterData
 
     public bool IsDead => CurrentHP <= 0;
 
+    public bool IsPlayerCharacter { get; internal set; }
+
+
     /// <summary>
     /// Returns the effective speed for the specified round.
     /// Currently this is the base speed but will later include buffs or debuffs.

@@ -6,7 +6,10 @@ public partial class CharacterNode : Node2D
 {
     [Export] public Texture2D CharacterImage;
     private Sprite2D _sprite;
-    private ShaderMaterial _shader;
+    private ShaderMaterial _greenshader;
+    private ShaderMaterial _whiteshader;
+    private ShaderMaterial _redshader;
+
     private bool _isHovered = false;
     private bool _isCurrentFighter = false;
     private ProgressBar _hpBar;
@@ -17,8 +20,10 @@ public partial class CharacterNode : Node2D
 
     public override void _Ready()
     {
-        _sprite = GetNode<Sprite2D>("%CharacterSprite");
-        _shader = _sprite.Material as ShaderMaterial;
+        _sprite = GetNode<Sprite2D>("%CharacterTexture");
+        _greenshader = GD.Load<ShaderMaterial>("uid://c6pt7umnbysyt");
+        _whiteshader = GD.Load<ShaderMaterial>("uid://38mg6q7dh3vl");
+        _redshader = GD.Load<ShaderMaterial>("uid://b3k6vlw6bpvl6");
         _hpBar = GetNode<ProgressBar>("%HPBar");
         _manaBar = GetNode<ProgressBar>("%ManaBar");
         _nameLabel = GetNode<Label>("%NameLabel");
@@ -26,21 +31,23 @@ public partial class CharacterNode : Node2D
         if (CharacterImage != null)
             _sprite.Texture = CharacterImage;
 
-        _sprite.Connect("mouse_entered", new Callable(this, nameof(OnMouseEntered)));
-        _sprite.Connect("mouse_exited", new Callable(this, nameof(OnMouseExited)));
+        // this.Connect("mouse_entered", new Callable(this, nameof(OnMouseEntered)));
+        // this.Connect("mouse_exited", new Callable(this, nameof(OnMouseExited)));
 
         UpdateUI();
         UpdateOutline();
     }
 
-    private void OnMouseEntered()
+    private void _on_character_body_2d_mouse_entered()
     {
+        GD.Print("OnMouseEntered");
         _isHovered = true;
         UpdateOutline();
     }
 
-    private void OnMouseExited()
+    private void _on_character_body_2d_mouse_exited()
     {
+        GD.Print("OnMouseExited");
         _isHovered = false;
         UpdateOutline();
     }
@@ -53,23 +60,30 @@ public partial class CharacterNode : Node2D
 
     private void UpdateOutline()
     {
-        if (_shader == null) return;
+        if (_sprite == null) return;
 
         if (_isCurrentFighter)
         {
-            _shader.SetShaderParameter("line_color", new Color(0, 1, 0, 1));
-            _shader.SetShaderParameter("line_thickness", 10.0f);
+            _sprite.Material = _greenshader;
+            // _whiteshader.SetShaderParameter("line_color", new Color(0, 1, 0, 1));
+            // _whiteshader.SetShaderParameter("line_thickness", 10.0f);
             return;
         }
 
         if (_isHovered)
         {
-            _shader.SetShaderParameter("line_color", new Color(1, 1, 1, 1));
-            _shader.SetShaderParameter("line_thickness", 10.0f);
+            if (this.Data.IsPlayerCharacter)
+            {
+                _sprite.Material = _whiteshader;
+            }
+            else
+            {
+                _sprite.Material = _redshader;
+            }            
         }
         else
         {
-            _shader.SetShaderParameter("line_thickness", 0.0f);
+            _whiteshader.SetShaderParameter("line_thickness", 0.0f);
         }
     }
     public void SetData(CharacterData data)
