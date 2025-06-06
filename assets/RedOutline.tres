@@ -1,3 +1,8 @@
-[gd_resource type="ShaderMaterial" format=3 uid="uid://b3k6vlw6bpvl6"]
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://b3k6vlw6bpvl6"]
+
+[ext_resource type="Shader" uid="uid://bfpky86adx6j8" path="res://Scripts/battlesystem/OutlineShader.gdshader" id="1_m3u5i"]
 
 [resource]
+shader = ExtResource("1_m3u5i")
+shader_parameter/line_color = Color(1, 0, 0, 1)
+shader_parameter/line_thickness = 10.0

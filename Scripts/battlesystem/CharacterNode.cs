@@ -6,10 +6,6 @@ public partial class CharacterNode : Node2D
 {
     [Export] public Texture2D CharacterImage;
     private Sprite2D _sprite;
-    private ShaderMaterial _greenshader;
-    private ShaderMaterial _whiteshader;
-    private ShaderMaterial _redshader;
-
     private bool _isHovered = false;
     private bool _isCurrentFighter = false;
     private ProgressBar _hpBar;
@@ -17,19 +13,22 @@ public partial class CharacterNode : Node2D
     private Label _nameLabel;
 
     public CharacterData Data;
+    private ShaderMaterial _shadermaterial;
+
 
     public override void _Ready()
     {
-        _sprite = GetNode<Sprite2D>("%CharacterTexture");
-        _greenshader = GD.Load<ShaderMaterial>("uid://c6pt7umnbysyt");
-        _whiteshader = GD.Load<ShaderMaterial>("uid://38mg6q7dh3vl");
-        _redshader = GD.Load<ShaderMaterial>("uid://b3k6vlw6bpvl6");
+        _sprite = GetNode<Sprite2D>("%CharacterTexture");        
         _hpBar = GetNode<ProgressBar>("%HPBar");
         _manaBar = GetNode<ProgressBar>("%ManaBar");
         _nameLabel = GetNode<Label>("%NameLabel");
-
         if (CharacterImage != null)
             _sprite.Texture = CharacterImage;
+        _shadermaterial = new ShaderMaterial();
+        var shader = GD.Load<Shader>("uid://bfpky86adx6j8");
+        _shadermaterial.Shader = shader;
+        _sprite.Material = _shadermaterial;
+
 
         // this.Connect("mouse_entered", new Callable(this, nameof(OnMouseEntered)));
         // this.Connect("mouse_exited", new Callable(this, nameof(OnMouseExited)));
@@ -64,42 +63,40 @@ public partial class CharacterNode : Node2D
 
         if (_isCurrentFighter)
         {
-            _sprite.Material = _greenshader;
-            // _whiteshader.SetShaderParameter("line_color", new Color(0, 1, 0, 1));
-            // _whiteshader.SetShaderParameter("line_thickness", 10.0f);
+            GD.Print("_greenshader");
+            
+            _shadermaterial.SetShaderParameter("line_color", new Color(0, 1, 0, 1));
+            _shadermaterial.SetShaderParameter("line_thickness", 10.0f);
             return;
         }
-
         if (_isHovered)
         {
             if (this.Data.IsPlayerCharacter)
             {
-                _sprite.Material = _whiteshader;
+                GD.Print("_whiteshader");
+                _shadermaterial.SetShaderParameter("line_color", new Color(1, 1, 1, 1));
+                _shadermaterial.SetShaderParameter("line_thickness", 10.0f);
+                
             }
             else
             {
-                _sprite.Material = _redshader;
-            }            
+                GD.Print("_redshader");
+                _shadermaterial.SetShaderParameter("line_color", new Color(1, 0, 0, 1));
+                _shadermaterial.SetShaderParameter("line_thickness", 10.0f);                
+            }
         }
         else
         {
-            _whiteshader.SetShaderParameter("line_thickness", 0.0f);
+            _shadermaterial.SetShaderParameter("line_color", new Color(0, 0, 0, 0));
         }
+        
     }
     public void SetData(CharacterData data)
     {
         Data = data;
         data.Node = this;
         if (data.CharacterImage != null)
-            CharacterImage = data.CharacterImage;
-
-        // UpdateUI will be called in _Ready() once the node is fully
-        // initialized. Avoid calling it here when UI nodes are not yet
-        // available.
-        if (_hpBar != null && _manaBar != null)
-        {
-            UpdateUI();
-        }
+            CharacterImage = data.CharacterImage;        
     }
 
     public void UpdateUI()
