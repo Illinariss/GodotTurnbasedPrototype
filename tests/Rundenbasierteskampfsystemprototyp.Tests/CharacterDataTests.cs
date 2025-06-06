@@ -5,7 +5,7 @@ public class CharacterDataTests
     [Fact]
     public void Name_IsStored()
     {
-        var character = new CharacterData("TestName", 10, 5, 1, 1, 1);
+        var character = new CharacterData("TestName",true, 10, 5, 1, 1, 1);
         Assert.Equal("TestName", character.Name);
     }
 
@@ -15,7 +15,7 @@ public class CharacterDataTests
     [InlineData(-5, false, true)]
     public void IsAlive_And_IsDead_Work_AsExpected(int hp, bool expectedAlive, bool expectedDead)
     {
-        var character = new CharacterData("Test", 10, 5, 1, 1, 1);
+        var character = new CharacterData("Test",true, 10, 5, 1, 1, 1);
         character.CurrentHP = hp;
 
         Assert.Equal(expectedAlive, character.IsAlive);
@@ -25,14 +25,14 @@ public class CharacterDataTests
     [Fact]
     public void GetSpeed_Returns_BaseSpeed()
     {
-        var character = new CharacterData("Test", 10, 5, 7, 1, 1);
+        var character = new CharacterData("Test",true, 10, 5, 7, 1, 1);
         Assert.Equal(7, character.GetSpeed(0));
     }
 
     [Fact]
     public void AdvanceRound_Increments_Round()
     {
-        var character = new CharacterData("Test", 10, 5, 7, 1, 1);
+        var character = new CharacterData("Test",true, 10, 5, 7, 1, 1);
         character.AdvanceRound();
         Assert.Equal(1, character.Round);
     }

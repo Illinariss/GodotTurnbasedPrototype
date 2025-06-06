@@ -35,9 +35,10 @@ public class CharacterData
     /// </summary>
     public int Round { get; private set; }
 
-    public CharacterData(string name, int maxHP, int maxMana, int speed, int attack, int defence, Texture2D? characterImage = null)
+    public CharacterData(string name,bool isPlayerCharacter, int maxHP, int maxMana, int speed, int attack, int defence, Texture2D? characterImage = null)
     {
         Name = name;
+        IsPlayerCharacter = isPlayerCharacter;
         MaxHP = maxHP;
         CurrentHP = maxHP;
         MaxMana = maxMana;

@@ -44,9 +44,9 @@ public partial class Game : Control
         var bearImage = GD.Load<Texture2D>("res://assets/Bär in Bewegung.png");
         var wolfImage = GD.Load<Texture2D>("res://assets/Wolf in schwarzem Silhouettenprofil.png");
 
-        var player = new CharacterData("Held", 100, 20, 15, 15, 15, playerImage);
-        var bear = new CharacterData("Bär", 200, 0, 5, 8, 10, bearImage);
-        var wolf = new CharacterData("Wolf", 50, 0, 20, 5, 5, wolfImage);
+        var player = new CharacterData("Held",true, 100, 20, 15, 15, 15, playerImage);
+        var bear = new CharacterData("Bär",false, 200, 0, 5, 8, 10, bearImage);
+        var wolf = new CharacterData("Wolf",false, 50, 0, 20, 5, 5, wolfImage);
 
         StartBattle(new List<CharacterData> { player }, new List<CharacterData> { bear, wolf });
 
