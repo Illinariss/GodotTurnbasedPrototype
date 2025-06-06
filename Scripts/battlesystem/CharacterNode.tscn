@@ -48,7 +48,7 @@ script = ExtResource("1_0pxp8")
 position = Vector2(110, 206)
 shape = SubResource("CapsuleShape2D_o6dxo")
 
-[node name="CharacterSprite" type="Sprite2D" parent="CharacterBody2D"]
+[node name="CharacterTexture" type="Sprite2D" parent="CharacterBody2D"]
 unique_name_in_owner = true
 material = SubResource("ShaderMaterial_o6dxo")
 position = Vector2(109, 210)
@@ -67,8 +67,14 @@ theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
+
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer"]
 layout_mode = 2
+
+[node name="NameLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Name"
 
 [node name="HPBar" type="ProgressBar" parent="PanelContainer/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true

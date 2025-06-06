@@ -11,6 +11,7 @@ public partial class CharacterNode : Node2D
     private bool _isCurrentFighter = false;
     private ProgressBar _hpBar;
     private ProgressBar _manaBar;
+    private Label _nameLabel;
 
     public CharacterData Data;
 
@@ -20,6 +21,7 @@ public partial class CharacterNode : Node2D
         _shader = _sprite.Material as ShaderMaterial;
         _hpBar = GetNode<ProgressBar>("%HPBar");
         _manaBar = GetNode<ProgressBar>("%ManaBar");
+        _nameLabel = GetNode<Label>("%NameLabel");
 
         if (CharacterImage != null)
             _sprite.Texture = CharacterImage;
@@ -93,6 +95,8 @@ public partial class CharacterNode : Node2D
         _hpBar.Value = Data.CurrentHP;
         _manaBar.MaxValue = Data.MaxMana;
         _manaBar.Value = Data.CurrentMana;
+        if (_nameLabel != null)
+            _nameLabel.Text = Data.Name;
     }
 
     public static CharacterNode Create(CharacterData data)
