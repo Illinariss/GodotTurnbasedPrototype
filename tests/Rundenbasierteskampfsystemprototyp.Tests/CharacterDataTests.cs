@@ -2,6 +2,13 @@ using Xunit;
 
 public class CharacterDataTests
 {
+    [Fact]
+    public void Name_IsStored()
+    {
+        var character = new CharacterData("TestName", 10, 5, 1, 1, 1);
+        Assert.Equal("TestName", character.Name);
+    }
+
     [Theory]
     [InlineData(1, true, false)]
     [InlineData(0, false, true)]
