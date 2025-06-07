@@ -72,7 +72,13 @@ public class BattleManager
         target.CurrentHP = Math.Max(0, target.CurrentHP - damage);
         log?.AppendText($"\n{attacker.Name} greift {target.Name} an und verursacht {damage} Schaden.");
         if (target.IsDead)
-            log?.AppendText($"\n{target.Name} wurde besiegt.");
+        {
+            log?.AppendText($"\n{target.Name} hat keine HP mehr und wurde besiegt.");
+        }
+        else
+        {
+            log?.AppendText($"\n{target.Name} hat noch {target.CurrentHP}/{target.MaxHP} HP.");
+        }
     }
 
     public void Guard(CharacterData actor)
