@@ -19,8 +19,8 @@ public partial class BattleScene : Control
     {
         this.onBattleFinished = onFinishedCallback;
 
-        playerPositions = new Queue<Vector2>(GetGridPositions(playerCharacters.Count, new Vector2(50, 100), new Vector2(250, 600)));
-        enemyPositions = new Queue<Vector2>(GetGridPositions(enemies.Count, new Vector2(800, 100), new Vector2(1100, 600)));
+        playerPositions = new Queue<Vector2>(GetGridPositions(playerCharacters.Count, new Vector2(50, 100), new Vector2(250, 400)));
+        enemyPositions = new Queue<Vector2>(GetGridPositions(enemies.Count, new Vector2(800, 100), new Vector2(1100, 400)));
 
         foreach (var playerCharacter in playerCharacters)
         {
