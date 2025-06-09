@@ -48,6 +48,9 @@ public partial class Game : Control
         var bear = new CharacterData("Bär",false, 200, 0, 5, 8, 10, bearImage);
         var wolf = new CharacterData("Wolf",false, 50, 0, 20, 5, 5, wolfImage);
 
+        bear.CombatAI = new RandomCombatAI();
+        wolf.CombatAI = new RandomCombatAI();
+
         StartBattle(new List<CharacterData> { player }, new List<CharacterData> { bear, wolf });
 
     }

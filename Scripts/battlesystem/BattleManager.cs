@@ -124,7 +124,18 @@ public class BattleManager
         var actor = StepTurn(initiativeGauge, rounds);
 
         actor.RemoveExpiredBuffs(actor.Round);
-        log.AppendText($"\n{actor.Name} ist am Zug.");
+        log?.AppendText($"\n{actor.Name} ist am Zug.");
+
+        var context = new BattleContext
+        {
+            Enemylist = playerCharacters.Contains(actor) ? enemies : playerCharacters,
+            Turnnumber = actor.Round
+        };
+
+        if (!actor.IsPlayerCharacter && actor.CombatAI != null)
+        {
+            actor.CombatAI.DecideNextAction(context);
+        }
 
         CharacterData target = null;
         if (playerCharacters.Contains(actor))

@@ -28,6 +28,18 @@ public class CharacterData
 
     public CharacterNode Node { get; set; }
 
+    public ICombatAI? CombatAI
+    {
+        get => combatAI;
+        set
+        {
+            combatAI = value;
+            combatAI?.Initialize(this);
+        }
+    }
+
+    private ICombatAI? combatAI;
+
     public List<IAbility> Abilities { get; } = new();
 
     private readonly List<Buff> buffs = new();
