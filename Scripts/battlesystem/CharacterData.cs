@@ -28,6 +28,8 @@ public class CharacterData
 
     public CharacterNode Node { get; set; }
 
+    public List<IAbility> Abilities { get; } = new();
+
     private readonly List<Buff> buffs = new();
 
     /// <summary>
