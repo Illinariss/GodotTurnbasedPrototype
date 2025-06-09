@@ -6,5 +6,7 @@ public class AttackAbility : BasicAbility
         Scalestat = CharacterStat.Attack;
         Faktor = 1;
         ResourceCost = 0;
+        Name = "Attack";
+        RequiresTarget = true;
    }
 }

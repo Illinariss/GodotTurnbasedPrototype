@@ -116,9 +116,4 @@ public class CharacterData
         this.CurrentHP -= (dmg - GetStat(CharacterStat.Defence, Turn));
     }
 
-    internal async Task ExcecuteTurn(BattleContext context)
-    {
-        //TODO: wait for finished interface actions of player
-    }
-
 }

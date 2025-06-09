@@ -13,6 +13,8 @@ public class BattleManager
     private Dictionary<CharacterData, int> initiativeGauge = new();
     private List<CharacterData> allCharacters = new();
     private const float SkipRefundFactor = 0.75f;
+
+    public event Func<CharacterData, BattleContext, Task<BattleAction>>? RequestPlayerAction;
     
 
     /// <summary>
@@ -115,21 +117,21 @@ public class BattleManager
             Enemylist = playerCharacters.Contains(actor) ? enemies : playerCharacters
         };
 
+        BattleAction? action = null;
         if (!actor.IsPlayerCharacter && actor.CombatAI != null)
         {
-            var action = actor.CombatAI.DecideNextAction(context);
-
+            action = actor.CombatAI.DecideNextAction(context);
         }
-        else
+        else if (RequestPlayerAction != null)
         {
-            await actor.ExcecuteTurn(context);
-        }        
+            action = await RequestPlayerAction.Invoke(actor, context);
+        }
 
-        CharacterData target = null;
-        if (playerCharacters.Contains(actor))
-            target = enemies.FirstOrDefault(e => e.IsAlive);
-        else
-            target = playerCharacters.FirstOrDefault(p => p.IsAlive);
+        if (action != null)
+        {
+            ExcecuteAction(actor, action);
+        }
+
         actor.AdvanceRound();
         UpcomingTurns = PredictTurns(10);
 

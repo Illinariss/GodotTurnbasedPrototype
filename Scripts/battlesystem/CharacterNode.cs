@@ -4,6 +4,8 @@ using System.Runtime.CompilerServices;
 
 public partial class CharacterNode : Node2D
 {
+    [Signal]
+    public delegate void CharacterClicked(CharacterNode node);
     [Export] public Texture2D CharacterImage;
     private Sprite2D _sprite;
     private bool _isHovered = false;
@@ -18,7 +20,7 @@ public partial class CharacterNode : Node2D
 
     public override void _Ready()
     {
-        _sprite = GetNode<Sprite2D>("%CharacterTexture");        
+        _sprite = GetNode<Sprite2D>("%CharacterTexture");
         _hpBar = GetNode<ProgressBar>("%HPBar");
         _manaBar = GetNode<ProgressBar>("%ManaBar");
         _nameLabel = GetNode<Label>("%NameLabel");
@@ -29,8 +31,19 @@ public partial class CharacterNode : Node2D
         _shadermaterial.Shader = shader;
         _sprite.Material = _shadermaterial;
 
+        var body = GetNode<CharacterBody2D>("CharacterBody2D");
+        body.InputEvent += OnBodyInput;
+
         UpdateUI();
         UpdateOutline();
+    }
+
+    private void OnBodyInput(Node viewport, InputEvent @event, long shapeIdx)
+    {
+        if (@event is InputEventMouseButton mouse && mouse.Pressed && mouse.ButtonIndex == MouseButton.Left)
+        {
+            EmitSignal(SignalName.CharacterClicked, this);
+        }
     }
 
     private void _on_character_body_2d_mouse_entered()
