@@ -35,32 +35,17 @@ offset_top = 10.0
 offset_right = 980.0
 offset_bottom = 60.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="AbilityScroll" type="ScrollContainer" parent="."]
 layout_mode = 2
 offset_left = 351.0
 offset_top = 486.0
 offset_right = 708.0
 offset_bottom = 635.0
 
-[node name="NextTurnButton" type="Button" parent="VBoxContainer"]
+[node name="AbilityGrid" type="GridContainer" parent="AbilityScroll"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Next"
-
-[node name="btnAngriff" type="Button" parent="VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Angriff"
-
-[node name="btnGuard" type="Button" parent="VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Guard"
-
-[node name="btnSkip" type="Button" parent="VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Skip"
+columns = 1
 
 [node name="BattleLog" type="RichTextLabel" parent="."]
 unique_name_in_owner = true

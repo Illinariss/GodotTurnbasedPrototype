@@ -1,12 +1,14 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 public partial class BattleScene : Control
 {
     [Export] public Node2D Map;
     [Export] public RichTextLabel BattleLog;
-    [Export] public Button NextTurnButton;
+    [Export] public ScrollContainer AbilityScroll;
+    [Export] public GridContainer AbilityGrid;
     [Export] public HBoxContainer TurnOrderContainer;
 
     private List<CharacterNode> playerNodes = new();
@@ -14,6 +16,12 @@ public partial class BattleScene : Control
     private BattleManager battleManager;
     private Queue<Vector2> playerPositions = new();
     private Queue<Vector2> enemyPositions = new();
+
+    private CharacterData currentActor;
+    private BattleContext currentContext;
+    private TaskCompletionSource<BattleAction>? pendingAction;
+    private Button? selectedButton;
+    private BasicAbility? selectedAbility;
     
      private Action onBattleFinished;
     public void Setup(List<CharacterData> playerCharacters, List<CharacterData> enemies, Action onFinishedCallback)
@@ -32,7 +40,9 @@ public partial class BattleScene : Control
             AddCharacterNode(enemy, isPlayer: false);
         }
         battleManager = new BattleManager(playerCharacters, enemies, BattleLog, onFinishedCallback);
+        battleManager.RequestPlayerAction += OnRequestPlayerAction;
         UpdateTurnOrderDisplay();
+        battleManager.ExecuteTurn();
     }
 
     private List<Vector2> GetGridPositions(int count, Vector2 areaMin, Vector2 areaMax)
@@ -96,6 +106,7 @@ public partial class BattleScene : Control
         node.Position = pos;
 
         Map.AddChild(node);
+        node.CharacterClicked += OnCharacterClicked;
         targetList.Add(node);
     }
 
@@ -112,24 +123,14 @@ public partial class BattleScene : Control
             this.BattleLog = GetNode<RichTextLabel>("%BattleLog");
             this.BattleLog.AppendText("Battle: Start");
         }
-        if (NextTurnButton == null)
-        {
-            NextTurnButton = GetNode<Button>("%NextTurnButton");
-        }
-        NextTurnButton.Pressed += OnNextTurn;
-
+        if (AbilityScroll == null)
+            AbilityScroll = GetNode<ScrollContainer>("%AbilityScroll");
+        if (AbilityGrid == null)
+            AbilityGrid = GetNode<GridContainer>("%AbilityGrid");
         if (TurnOrderContainer == null)
             TurnOrderContainer = GetNode<HBoxContainer>("%TurnOrderContainer");
     }
 
-    private void OnNextTurn()
-    {
-        battleManager.ExecuteTurn();
-        // Optional: UI aktualisieren
-        foreach (var node in playerNodes) node.UpdateUI();
-        foreach (var node in enemyNodes) node.UpdateUI();
-        UpdateTurnOrderDisplay();
-    }
 
     private void UpdateTurnOrderDisplay()
     {
@@ -146,5 +147,94 @@ public partial class BattleScene : Control
             btn.Text = $"{i + 1}. {turns[i].Name}";
             TurnOrderContainer.AddChild(btn);
         }
+    }
+
+    private Task<BattleAction> OnRequestPlayerAction(CharacterData actor, BattleContext context)
+    {
+        currentActor = actor;
+        currentContext = context;
+        ShowAbilityButtons(actor);
+        pendingAction = new TaskCompletionSource<BattleAction>();
+        return pendingAction.Task;
+    }
+
+    private void ShowAbilityButtons(CharacterData actor)
+    {
+        if (AbilityGrid == null) return;
+        foreach (Node child in AbilityGrid.GetChildren())
+            child.QueueFree();
+
+        var abilities = new List<BasicAbility>(actor.Abilities);
+        abilities.Sort((a, b) => string.Compare(a.Name, b.Name, StringComparison.Ordinal));
+        AbilityGrid.Columns = Math.Max(1, (int)Math.Ceiling(abilities.Count / 2.0));
+
+        foreach (var ability in abilities)
+        {
+            var btn = new Button { Text = ability.Name, ToggleMode = true };
+            btn.Pressed += () => OnAbilityButtonPressed(btn, ability);
+            AbilityGrid.AddChild(btn);
+        }
+    }
+
+    private void ClearAbilityButtons()
+    {
+        if (AbilityGrid == null) return;
+        foreach (Node child in AbilityGrid.GetChildren())
+            child.QueueFree();
+    }
+
+    private void OnAbilityButtonPressed(Button btn, BasicAbility ability)
+    {
+        if (pendingAction == null)
+            return;
+
+        if (selectedButton == btn)
+        {
+            btn.ButtonPressed = false;
+            selectedButton = null;
+            selectedAbility = null;
+            return;
+        }
+
+        if (selectedButton != null)
+            selectedButton.ButtonPressed = false;
+
+        selectedButton = btn;
+        selectedAbility = ability;
+        btn.ButtonPressed = true;
+
+        if (!ability.RequiresTarget)
+        {
+            FinishAction(new BattleAction(ability));
+        }
+    }
+
+    private void OnCharacterClicked(CharacterNode node)
+    {
+        if (pendingAction == null || selectedAbility == null)
+            return;
+
+        if (!selectedAbility.RequiresTarget)
+            return;
+
+        FinishAction(new BattleAction(selectedAbility, node.Data));
+    }
+
+    private void FinishAction(BattleAction action)
+    {
+        pendingAction?.SetResult(action);
+        pendingAction = null;
+
+        if (selectedButton != null)
+        {
+            selectedButton.ButtonPressed = false;
+            selectedButton = null;
+        }
+        selectedAbility = null;
+        ClearAbilityButtons();
+        foreach (var node in playerNodes) node.UpdateUI();
+        foreach (var node in enemyNodes) node.UpdateUI();
+        UpdateTurnOrderDisplay();
+        battleManager.ExecuteTurn();
     }
 }
