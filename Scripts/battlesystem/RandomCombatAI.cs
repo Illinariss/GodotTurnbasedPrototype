@@ -14,15 +14,19 @@ public class RandomCombatAI : ICombatAI
     public BattleAction DecideNextAction(BattleContext context)
     {
         var damagingAbilities = self?.Abilities
-            .Where(a => a.Type == AbilityType.Attack && a.Damage > 0)
+            .Where(a => a.Type == AbilityType.Attack)
             .ToList();
 
         if (damagingAbilities == null || damagingAbilities.Count == 0)
         {
-            return new BattleAction { SelectedAktion = string.Empty };
+            throw new Exception($"Character {self.Name} has no abbilitys!");
         }
-
+        if (context.Enemylist == null || context.Enemylist.Count == 0)
+        {
+            throw new Exception($"Character {self.Name} has no targets!");
+        }
         var ability = damagingAbilities[random.Next(damagingAbilities.Count)];
-        return new BattleAction { SelectedAktion = ability.Name };
+        var target = context.Enemylist[random.Next(context.Enemylist.Count)];
+        return new BattleAction(ability,target);
     }
 }

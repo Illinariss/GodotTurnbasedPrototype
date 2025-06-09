@@ -20,8 +20,8 @@ public partial class BattleScene : Control
     {
         this.onBattleFinished = onFinishedCallback;
 
-        playerPositions = new Queue<Vector2>(GetGridPositions(playerCharacters.Count, new Vector2(50, 100), new Vector2(250, 400)));
-        enemyPositions = new Queue<Vector2>(GetGridPositions(enemies.Count, new Vector2(800, 100), new Vector2(1100, 400)));
+        playerPositions = new Queue<Vector2>(GetGridPositions(playerCharacters.Count, new Vector2(50, 50), new Vector2(250, 300)));
+        enemyPositions = new Queue<Vector2>(GetGridPositions(enemies.Count, new Vector2(800, 50), new Vector2(1100, 300)));
 
         foreach (var playerCharacter in playerCharacters)
         {
@@ -107,9 +107,16 @@ public partial class BattleScene : Control
             // Assign the Battlers node if not linked via the inspector
             Map = GetNode<Node2D>("%Battlers");
         }
-
-        if (NextTurnButton != null)
-            NextTurnButton.Pressed += OnNextTurn;
+        if (BattleLog == null)
+        {
+            this.BattleLog = GetNode<RichTextLabel>("%BattleLog");
+            this.BattleLog.AppendText("Battle: Start");
+        }
+        if (NextTurnButton == null)
+        {
+            NextTurnButton = GetNode<Button>("%NextTurnButton");
+        }
+        NextTurnButton.Pressed += OnNextTurn;
 
         if (TurnOrderContainer == null)
             TurnOrderContainer = GetNode<HBoxContainer>("%TurnOrderContainer");

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Godot;
 
 public enum CharacterStat
@@ -16,10 +17,10 @@ public enum CharacterStat
 public class CharacterData
 {
     public string Name { get; set; }
-    public int MaxHP { get; set; }
-    public int CurrentHP { get; set; }
-    public int MaxMana { get; set; }
-    public int CurrentMana { get; set; }
+    public float MaxHP { get; set; }
+    public float CurrentHP { get; set; }
+    public float MaxMana { get; set; }
+    public float CurrentMana { get; set; }
     public int Speed { get; set; }
     public int Attack { get; set; }
     public int Defence { get; set; }
@@ -40,16 +41,16 @@ public class CharacterData
 
     private ICombatAI? combatAI;
 
-    public List<IAbility> Abilities { get; } = new();
+    public List<BasicAbility> Abilities { get; } = new();
 
     private readonly List<Buff> buffs = new();
 
     /// <summary>
     /// Number of turns this character has already taken.
     /// </summary>
-    public int Round { get; private set; }
+    public int Turn { get; private set; }
 
-    public CharacterData(string name,bool isPlayerCharacter, int maxHP, int maxMana, int speed, int attack, int defence, Texture2D? characterImage = null)
+    public CharacterData(string name, bool isPlayerCharacter, int maxHP, int maxMana, int speed, int attack, int defence, Texture2D? characterImage = null)
     {
         Name = name;
         IsPlayerCharacter = isPlayerCharacter;
@@ -69,9 +70,9 @@ public class CharacterData
 
     public bool IsPlayerCharacter { get; internal set; }
 
-    public int GetStat(CharacterStat stat, int round)
+    public float GetStat(CharacterStat stat, int round)
     {
-        int baseValue = stat switch
+        float baseValue = stat switch
         {
             CharacterStat.Speed => Speed,
             CharacterStat.Attack => Attack,
@@ -98,7 +99,7 @@ public class CharacterData
     /// <summary>
     /// Increments the internal round counter.
     /// </summary>
-    public void AdvanceRound() => Round++;
+    public void AdvanceRound() => Turn++;
 
     public void AddBuff(Buff buff)
     {
@@ -109,5 +110,15 @@ public class CharacterData
     {
         buffs.RemoveAll(b => !b.IsActive(round));
     }
-   
+
+    public void RecieveDmg(float dmg)
+    {
+        this.CurrentHP -= (dmg - GetStat(CharacterStat.Defence, Turn));
+    }
+
+    internal async Task ExcecuteTurn(BattleContext context)
+    {
+        //TODO: wait for finished interface actions of player
+    }
+
 }

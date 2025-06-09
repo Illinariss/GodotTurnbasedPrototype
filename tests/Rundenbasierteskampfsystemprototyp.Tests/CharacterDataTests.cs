@@ -34,7 +34,7 @@ public class CharacterDataTests
     {
         var character = new CharacterData("Test",true, 10, 5, 7, 1, 1);
         character.AdvanceRound();
-        Assert.Equal(1, character.Round);
+        Assert.Equal(1, character.Turn);
     }
 
     private class DummyAI : ICombatAI

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Godot;
 
 public class BattleManager
@@ -12,6 +13,7 @@ public class BattleManager
     private Dictionary<CharacterData, int> initiativeGauge = new();
     private List<CharacterData> allCharacters = new();
     private const float SkipRefundFactor = 0.75f;
+    
 
     /// <summary>
     /// Contains the next characters that will act. Updated after each turn.
@@ -40,7 +42,7 @@ public class BattleManager
     {
         return allCharacters
             .Where(c => c.IsAlive)
-            .Select(c => c.GetStat(CharacterStat.Speed, rounds[c]))
+            .Select(c => (int)c.GetStat(CharacterStat.Speed, rounds[c]))
             .DefaultIfEmpty(0)
             .Max() * 100;
     }
@@ -53,7 +55,7 @@ public class BattleManager
 
             foreach (var ch in allCharacters.Where(c => c.IsAlive))
             {
-                gauge[ch] += ch.GetStat(CharacterStat.Speed,rounds[ch]);
+                gauge[ch] += (int)ch.GetStat(CharacterStat.Speed, rounds[ch]);
                 if (gauge[ch] >= threshold)
                 {
                     gauge[ch] -= threshold;
@@ -64,33 +66,16 @@ public class BattleManager
         }
     }
 
-    public void Attack(CharacterData attacker, CharacterData target)
-    {
-        int atk = attacker.GetStat(CharacterStat.Attack,attacker.Round);
-        int def = target.GetStat(CharacterStat.Defence,target.Defence);
-        int damage = Math.Max(1, atk - def);
-        target.CurrentHP = Math.Max(0, target.CurrentHP - damage);
-        log?.AppendText($"\n{attacker.Name} greift {target.Name} an und verursacht {damage} Schaden.");
-        if (target.IsDead)
-        {
-            log?.AppendText($"\n{target.Name} hat keine HP mehr und wurde besiegt.");
-        }
-        else
-        {
-            log?.AppendText($"\n{target.Name} hat noch {target.CurrentHP}/{target.MaxHP} HP.");
-        }
-    }
-
     public void Guard(CharacterData actor)
     {
-        var buff = new Buff(CharacterStat.Defence, 0.5f, 0, actor.Round, actor.Round + 1);
+        var buff = new Buff(CharacterStat.Defence, 0.5f, 0, actor.Turn, actor.Turn + 1);
         actor.AddBuff(buff);
         log?.AppendText($"\n{actor.Name} verteidigt sich.");
     }
 
     public void Skip(CharacterData actor)
     {
-        var rounds = allCharacters.ToDictionary(c => c, c => c.Round);
+        var rounds = allCharacters.ToDictionary(c => c, c => c.Turn);
         int threshold = GetThreshold(initiativeGauge, rounds);
         initiativeGauge[actor] += (int)(threshold * SkipRefundFactor);
         log?.AppendText($"\n{actor.Name} hält sich zurück.");
@@ -99,7 +84,7 @@ public class BattleManager
     private List<CharacterData> PredictTurns(int count)
     {
         var gaugeCopy = new Dictionary<CharacterData, int>(initiativeGauge);
-        var roundCopy = allCharacters.ToDictionary(c => c, c => c.Round);
+        var roundCopy = allCharacters.ToDictionary(c => c, c => c.Turn);
         var result = new List<CharacterData>();
 
         for (int i = 0; i < count; i++)
@@ -111,43 +96,52 @@ public class BattleManager
         return result;
     }
 
-    public void ExecuteTurn()
+    public async Task ExecuteTurn()
     {
-
         if (playerCharacters.All(p => p.IsDead) || enemies.All(p => p.IsDead))
         {
             log.AppendText("\nDer Kampf ist vorbei.");
             return;
         }
 
-        var rounds = allCharacters.ToDictionary(c => c, c => c.Round);
+        var rounds = allCharacters.ToDictionary(c => c, c => c.Turn);
         var actor = StepTurn(initiativeGauge, rounds);
 
-        actor.RemoveExpiredBuffs(actor.Round);
+        actor.RemoveExpiredBuffs(actor.Turn);
         log?.AppendText($"\n{actor.Name} ist am Zug.");
 
         var context = new BattleContext
         {
-            Enemylist = playerCharacters.Contains(actor) ? enemies : playerCharacters,
-            Turnnumber = actor.Round
+            Enemylist = playerCharacters.Contains(actor) ? enemies : playerCharacters
         };
 
         if (!actor.IsPlayerCharacter && actor.CombatAI != null)
         {
-            actor.CombatAI.DecideNextAction(context);
+            var action = actor.CombatAI.DecideNextAction(context);
+
         }
+        else
+        {
+            await actor.ExcecuteTurn(context);
+        }        
 
         CharacterData target = null;
         if (playerCharacters.Contains(actor))
             target = enemies.FirstOrDefault(e => e.IsAlive);
         else
             target = playerCharacters.FirstOrDefault(p => p.IsAlive);
-
-        if (target != null)
-            Attack(actor, target);
-
         actor.AdvanceRound();
-
         UpcomingTurns = PredictTurns(10);
+
+    }
+
+    public void ExcecuteAction(CharacterData character, BattleAction action)
+    {
+        var target = action.Target;
+        if (action.Ability.Type == AbilityType.Attack)
+        {
+            var dmg = action.Ability.Faktor * character.GetStat(action.Ability.Scalestat, character.Turn);
+            action.Target.RecieveDmg(dmg);
+        }
     }
 }
