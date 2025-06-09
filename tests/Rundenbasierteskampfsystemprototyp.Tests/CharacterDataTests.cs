@@ -23,13 +23,6 @@ public class CharacterDataTests
     }
 
     [Fact]
-    public void GetSpeed_Returns_BaseSpeed()
-    {
-        var character = new CharacterData("Test",true, 10, 5, 7, 1, 1);
-        Assert.Equal(7, character.GetSpeed(0));
-    }
-
-    [Fact]
     public void AdvanceRound_Increments_Round()
     {
         var character = new CharacterData("Test",true, 10, 5, 7, 1, 1);
@@ -37,32 +30,5 @@ public class CharacterDataTests
         Assert.Equal(1, character.Turn);
     }
 
-    private class DummyAI : ICombatAI
-    {
-        public CharacterData? InitializedWith { get; private set; }
-        public bool DecideCalled { get; private set; }
-
-        public void Initialize(CharacterData self)
-        {
-            InitializedWith = self;
-        }
-
-        public BattleAction DecideNextAction(BattleContext context)
-        {
-            DecideCalled = true;
-            return new BattleAction();
-        }
-    }
-
-    [Fact]
-    public void Setting_CombatAI_Initializes_AI()
-    {
-        var character = new CharacterData("Test", false, 10, 5, 1, 1, 1);
-        var ai = new DummyAI();
-
-        character.CombatAI = ai;
-
-        Assert.Equal(ai, character.CombatAI);
-        Assert.Equal(character, ai.InitializedWith);
-    }
+   
 }

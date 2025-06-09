@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 public partial class CharacterNode : Node2D
 {
     [Signal]
-    public delegate void CharacterClicked(CharacterNode node);
+    public delegate void CharacterClickedEventHandler(CharacterNode node);
     [Export] public Texture2D CharacterImage;
     private Sprite2D _sprite;
     private bool _isHovered = false;
