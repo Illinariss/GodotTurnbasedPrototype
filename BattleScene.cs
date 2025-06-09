@@ -4,9 +4,10 @@ using System.Collections.Generic;
 
 public partial class BattleScene : Control
 {
-    [Export] public Node2D Map;    
+    [Export] public Node2D Map;
     [Export] public RichTextLabel BattleLog;
     [Export] public Button NextTurnButton;
+    [Export] public HBoxContainer TurnOrderContainer;
 
     private List<CharacterNode> playerNodes = new();
     private List<CharacterNode> enemyNodes = new();
@@ -31,7 +32,7 @@ public partial class BattleScene : Control
             AddCharacterNode(enemy, isPlayer: false);
         }
         battleManager = new BattleManager(playerCharacters, enemies, BattleLog, onFinishedCallback);
-
+        UpdateTurnOrderDisplay();
     }
 
     private List<Vector2> GetGridPositions(int count, Vector2 areaMin, Vector2 areaMax)
@@ -109,6 +110,9 @@ public partial class BattleScene : Control
 
         if (NextTurnButton != null)
             NextTurnButton.Pressed += OnNextTurn;
+
+        if (TurnOrderContainer == null)
+            TurnOrderContainer = GetNode<HBoxContainer>("%TurnOrderContainer");
     }
 
     private void OnNextTurn()
@@ -117,5 +121,23 @@ public partial class BattleScene : Control
         // Optional: UI aktualisieren
         foreach (var node in playerNodes) node.UpdateUI();
         foreach (var node in enemyNodes) node.UpdateUI();
+        UpdateTurnOrderDisplay();
+    }
+
+    private void UpdateTurnOrderDisplay()
+    {
+        if (TurnOrderContainer == null || battleManager == null)
+            return;
+
+        foreach (Node child in TurnOrderContainer.GetChildren())
+            child.QueueFree();
+
+        var turns = battleManager.UpcomingTurns;
+        for (int i = 0; i < turns.Count; i++)
+        {
+            var btn = new Button();
+            btn.Text = $"{i + 1}. {turns[i].Name}";
+            TurnOrderContainer.AddChild(btn);
+        }
     }
 }
