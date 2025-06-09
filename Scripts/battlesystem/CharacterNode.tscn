@@ -1,17 +1,18 @@
-[gd_scene load_steps=11 format=3 uid="uid://8w35m878oka8"]
+[gd_scene load_steps=12 format=3 uid="uid://8w35m878oka8"]
 
 [ext_resource type="Script" uid="uid://u8rkioeroef2" path="res://Scripts/battlesystem/CharacterNode.cs" id="1_0pxp8"]
 [ext_resource type="Texture2D" uid="uid://dhsombtrtq253" path="res://assets/Example_Character_1.png" id="2_3hcxy"]
+[ext_resource type="Texture2D" uid="uid://bbwi0trhtagxp" path="res://assets/Standing.png" id="2_c2o0f"]
 [ext_resource type="Shader" uid="uid://bfpky86adx6j8" path="res://Scripts/battlesystem/OutlineShader.gdshader" id="2_o6dxo"]
-
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_o6dxo"]
-radius = 63.0
-height = 250.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_c2o0f"]
 shader = ExtResource("2_o6dxo")
 shader_parameter/line_color = Color(1, 1, 1, 0)
 shader_parameter/line_thickness = 0.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_o6dxo"]
+radius = 63.0
+height = 250.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3hcxy"]
 bg_color = Color(0.87451, 0.87451, 0.87451, 0.203922)
@@ -46,9 +47,11 @@ script = ExtResource("1_0pxp8")
 input_pickable = true
 motion_mode = 1
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
-position = Vector2(110, 206)
-shape = SubResource("CapsuleShape2D_o6dxo")
+[node name="Standing" type="Sprite2D" parent="CharacterBody2D"]
+modulate = Color(1, 1, 1, 0.5)
+position = Vector2(112, 346)
+scale = Vector2(0.342773, 0.418945)
+texture = ExtResource("2_c2o0f")
 
 [node name="CharacterTexture" type="Sprite2D" parent="CharacterBody2D"]
 unique_name_in_owner = true
@@ -56,6 +59,12 @@ material = SubResource("ShaderMaterial_c2o0f")
 position = Vector2(109, 210)
 scale = Vector2(0.184, 0.19)
 texture = ExtResource("2_3hcxy")
+
+[node name="CanvasModulate" type="CanvasModulate" parent="CharacterBody2D"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
+position = Vector2(110, 206)
+shape = SubResource("CapsuleShape2D_o6dxo")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 offset_right = 250.0
