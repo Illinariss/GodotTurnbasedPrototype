@@ -40,7 +40,7 @@ public class BattleManager
     {
         return allCharacters
             .Where(c => c.IsAlive)
-            .Select(c => c.GetSpeed(rounds[c]))
+            .Select(c => c.GetStat(CharacterStat.Speed, rounds[c]))
             .DefaultIfEmpty(0)
             .Max() * 100;
     }
@@ -53,7 +53,7 @@ public class BattleManager
 
             foreach (var ch in allCharacters.Where(c => c.IsAlive))
             {
-                gauge[ch] += ch.GetSpeed(rounds[ch]);
+                gauge[ch] += ch.GetStat(CharacterStat.Speed,rounds[ch]);
                 if (gauge[ch] >= threshold)
                 {
                     gauge[ch] -= threshold;
@@ -66,8 +66,8 @@ public class BattleManager
 
     public void Attack(CharacterData attacker, CharacterData target)
     {
-        int atk = attacker.GetCurrentAttack();
-        int def = target.GetCurrentDefence();
+        int atk = attacker.GetStat(CharacterStat.Attack,attacker.Round);
+        int def = target.GetStat(CharacterStat.Defence,target.Defence);
         int damage = Math.Max(1, atk - def);
         target.CurrentHP = Math.Max(0, target.CurrentHP - damage);
         log?.AppendText($"\n{attacker.Name} greift {target.Name} an und verursacht {damage} Schaden.");

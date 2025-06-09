@@ -69,13 +69,6 @@ public class CharacterData
 
     public bool IsPlayerCharacter { get; internal set; }
 
-
-    /// <summary>
-    /// Returns the effective speed for the specified round.
-    /// Currently this is the base speed but will later include buffs or debuffs.
-    /// </summary>
-    public int GetSpeed(int round) => GetStat(CharacterStat.Speed, round);
-
     public int GetStat(CharacterStat stat, int round)
     {
         int baseValue = stat switch
@@ -101,21 +94,6 @@ public class CharacterData
 
         return (int)MathF.Round(baseValue + bonus);
     }
-
-    public int GetCurrentStat(CharacterStat stat) => GetStat(stat, Round);
-
-    /// <summary>
-    /// Returns the effective speed for the current round.
-    /// </summary>
-    public int GetCurrentSpeed() => GetSpeed(Round);
-
-    public int GetAttack(int round) => GetStat(CharacterStat.Attack, round);
-
-    public int GetCurrentAttack() => GetAttack(Round);
-
-    public int GetDefence(int round) => GetStat(CharacterStat.Defence, round);
-
-    public int GetCurrentDefence() => GetDefence(Round);
 
     /// <summary>
     /// Increments the internal round counter.
