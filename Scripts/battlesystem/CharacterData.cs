@@ -111,9 +111,17 @@ public class CharacterData
         buffs.RemoveAll(b => !b.IsActive(round));
     }
 
-    public void RecieveDmg(float dmg)
+    public void RecieveDmg(float dmg, RichTextLabel log)
     {
-        this.CurrentHP -= (dmg - GetStat(CharacterStat.Defence, Turn));
+        var afterdefense = dmg - GetStat(CharacterStat.Defence, Turn);
+        if (afterdefense <= 0)
+        {
+            afterdefense = 1;
+        }
+        log?.AddText($"\nDefence is { GetStat(CharacterStat.Defence, Turn)}");
+        log?.AddText($"\nDmg afer defence is {afterdefense}");
+        this.CurrentHP -= afterdefense;
+        log?.AddText($"\nHp is now {CurrentHP}");
     }
 
 }

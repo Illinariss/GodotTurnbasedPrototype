@@ -45,7 +45,6 @@ offset_bottom = 635.0
 [node name="AbilityGrid" type="GridContainer" parent="AbilityScroll"]
 unique_name_in_owner = true
 layout_mode = 2
-columns = 1
 
 [node name="BattleLog" type="RichTextLabel" parent="."]
 unique_name_in_owner = true

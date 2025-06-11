@@ -25,6 +25,7 @@ public partial class Game : Control
         MainContent.AddChild(battleScene);
         // Optional: Charakterdaten an Szene übergeben
         battleScene.Setup(playerCharacters, enemies, OnBattleFinished);
+                
     }
 
     public void OnBattleFinished()
@@ -45,11 +46,14 @@ public partial class Game : Control
         var wolfImage = GD.Load<Texture2D>("res://assets/Wolf in schwarzem Silhouettenprofil.png");
 
         var player = new CharacterData("Held",true, 100, 20, 15, 15, 15, playerImage);
-        var bear = new CharacterData("Bär",false, 200, 0, 5, 8, 10, bearImage);
-        var wolf = new CharacterData("Wolf",false, 50, 0, 20, 5, 5, wolfImage);
+        player.Abilities.Add(new AttackAbility());
+        
 
+        var bear = new CharacterData("Bär",false, 200, 0, 5, 8, 10, bearImage);
         bear.CombatAI = new RandomCombatAI();
         bear.Abilities.Add(new AttackAbility());
+
+        var wolf = new CharacterData("Wolf",false, 50, 0, 20, 5, 5, wolfImage);
         wolf.CombatAI = new RandomCombatAI();
         wolf.Abilities.Add(new AttackAbility());
 

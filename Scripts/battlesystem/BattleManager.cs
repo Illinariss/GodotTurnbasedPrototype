@@ -129,21 +129,23 @@ public class BattleManager
 
         if (action != null)
         {
-            ExcecuteAction(actor, action);
+            await ExcecuteAction(actor, action);
         }
 
         actor.AdvanceRound();
         UpcomingTurns = PredictTurns(10);
 
+        await ExecuteTurn();
     }
 
-    public void ExcecuteAction(CharacterData character, BattleAction action)
+    public async Task ExcecuteAction(CharacterData character, BattleAction action)
     {
         var target = action.Target;
         if (action.Ability.Type == AbilityType.Attack)
         {
             var dmg = action.Ability.Faktor * character.GetStat(action.Ability.Scalestat, character.Turn);
-            action.Target.RecieveDmg(dmg);
+            log?.AppendText($"\n{character.Name} attacks with {action.Ability.Name} and  {dmg} points.");            
+            action.Target.RecieveDmg(dmg, log);
         }
     }
 }
