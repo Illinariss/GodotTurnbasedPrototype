@@ -1,8 +1,0 @@
-[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://38mg6q7dh3vl"]
-
-[ext_resource type="Shader" uid="uid://bfpky86adx6j8" path="res://Scripts/battlesystem/OutlineShader.gdshader" id="1_tgbo4"]
-
-[resource]
-shader = ExtResource("1_tgbo4")
-shader_parameter/line_color = Color(1, 1, 1, 1)
-shader_parameter/line_thickness = 10.0
