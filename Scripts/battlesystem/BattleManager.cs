@@ -143,8 +143,8 @@ public class BattleManager
         var target = action.Target;
         if (action.Ability.Type == AbilityType.Attack)
         {
-            var dmg = action.Ability.Faktor * character.GetStat(action.Ability.Scalestat, character.Turn);
-            log?.AppendText($"\n{character.Name} attacks with {action.Ability.Name} and  {dmg} points.");            
+            var dmg = action.Ability.CalculateDamage(character);
+            log?.AppendText($"\n{character.Name} attacks with {action.Ability.Name} and  {dmg} points.");
             action.Target.RecieveDmg(dmg, log);
         }
     }
